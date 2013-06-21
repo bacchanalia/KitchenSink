@@ -1,0 +1,68 @@
+Name:           KitchenSink
+Version:        0.1.0.0
+Category:       Utility
+Synopsis:       because sometimes you just want to import everything
+Stability:      not even a bit
+Homepage:       .
+Copyright:      Copyright (C) 2013 Michael Zuser
+License:        GPL-3
+License-file:   COPYING
+Author:         Michael Zuser
+Maintainer:     mikezuser@gmail.com
+Cabal-version:  >=1.2
+Build-type:     Simple
+
+Description:
+    Everything in the Kitchen Sink
+
+Library
+    ghc-options:
+        -threaded
+
+    Exposed-modules:
+        KitchenSink
+      , KitchenSink.Combinators
+      , KitchenSink.Control
+      , KitchenSink.List
+      , KitchenSink.ChainCmp
+      , KitchenSink.Math
+      , KitchenSink.Qualified
+      , KitchenSink.Search
+      , KitchenSink.String
+      , KitchenSink.System
+
+    Build-depends:
+        base
+      , array
+      , async
+      , binary
+      , bits-extras
+      , bytestring
+      , Cabal
+      , case-insensitive
+      , concatenative
+      , containers
+      , deepseq
+      , directory
+      , filepath
+      , hashable
+      , MaybeT
+      , mtl
+      , old-locale
+      , parallel
+      , parallel-io
+      , parsec
+      , primitive
+      , process
+      , QuickCheck
+      , random
+      , split
+      , stm
+      , text
+      , time
+      , transformers
+      , unix
+      , unordered-containers
+      , utf8-string
+      , vector
+
