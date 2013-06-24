@@ -41,7 +41,10 @@ module KitchenSink
   , module Control.Concurrent.STM
   , module Control.Concurrent.ParallelIO.Local
   , module Control.DeepSeq
+  , module Control.Error
+  , leftT, rightT
   , module Control.Exception
+  , tryJustIO
   , module Control.Monad
   , module Control.Monad.Fix
   , module Control.Monad.Cont
@@ -155,7 +158,16 @@ import Control.Concurrent.MVar
 import Control.Concurrent.STM
 import Control.Concurrent.ParallelIO.Local
 import Control.DeepSeq
-import Control.Exception
+import Control.Error hiding
+    -- conflicts with Control.Arrow
+    ( left  -- disamb: leftT
+    , right -- disamb: rightT
+    -- replaced by Control.Monad.Maybe
+    , MaybeT, runMaybeT
+    )
+import Control.Exception hiding
+    -- conflicts with Control.Error
+    (tryJust) -- disamb: tryJustIO
 import Control.Monad hiding
     -- generalized by Data.Foldable
   ( forM_, mapM_, msum, sequence_
@@ -324,6 +336,8 @@ import Text.Parsec.Error
 import Text.Parsec.Pos
 import Text.Printf
 
+import qualified Control.Error
+import qualified Control.Exception
 import qualified Control.Monad.Writer
 import qualified Data.Fixed
 import qualified Data.List.Split
@@ -333,6 +347,24 @@ import qualified System.Posix
 import qualified System.Random
 import qualified Test.QuickCheck
 import qualified Text.Parsec
+
+-- | disambiguation: Control.Error.'Control.Error.left' /
+-- Control.Arrow.'Control.Arrow.left'
+--
+-- Control.Error.left => leftT
+leftT = Control.Error.left
+
+-- | disambiguation: Control.Error.'Control.Error.right' /
+-- Control.Arrow.'Control.Arrow.right'
+--
+-- Control.Error.right => rightT
+rightT = Control.Error.right
+
+-- | disambiguation: Control.Exception.'Control.Exception.tryJust' /
+-- Control.Error.'Control.Error.tryJust'
+--
+-- Control.Exception.tryJust => tryJustIO
+tryJustIO = Control.Exception.tryJust
 
 -- | disambiguation: Control.Monad.Writer.'Control.Monad.Writer.pass' /
 -- KitchenSink.Control.'KitchenSink.Control.pass'
@@ -419,7 +451,6 @@ labelsp = Text.Parsec.labels
 --  data-reify
 --  derive
 --  Diagrams
---  Errors
 --  Gtk
 --  HTML/XML something or other
 --  HUnit
