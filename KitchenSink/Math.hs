@@ -15,7 +15,7 @@
 
 -- | Miscellaneous mathematics
 module KitchenSink.Math
-  ( fibs, fac, primes, factors, divisors
+  ( tau, fibs, fac, primes, factors, divisors
   , showRadix, readRadix
   ) where
 import KitchenSink.Combinators
@@ -28,6 +28,10 @@ import Data.Char
 import Data.List
 import Data.Foldable (foldlM)
 import Data.Function
+
+-- | The circle constant
+tau :: Floating a => a
+tau = 2*pi
 
 -- | The Fibonacci sequence
 fibs :: [Integer]
