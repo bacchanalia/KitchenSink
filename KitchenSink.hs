@@ -159,8 +159,10 @@ import Control.Concurrent.STM
 import Control.Concurrent.ParallelIO.Local
 import Control.DeepSeq
 import Control.Error hiding
+    -- conficts with KitchenSink.Combinators
+    ( (??)
     -- conflicts with Control.Arrow
-    ( left  -- disamb: leftT
+    , left  -- disamb: leftT
     , right -- disamb: rightT
     -- replaced by Control.Monad.Maybe
     , MaybeT, runMaybeT
