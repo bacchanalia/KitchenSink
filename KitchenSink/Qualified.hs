@@ -122,11 +122,11 @@ module KitchenSink.Qualified
   , bin_runGet
   , bin_runGetState
   , bin_skip
-  , bin_uncheckedSkip
+  -- , bin_uncheckedSkip
   , bin_lookAhead
   , bin_lookAheadM
   , bin_lookAheadE
-  , bin_uncheckedLookAhead
+  -- , bin_uncheckedLookAhead
   , bin_bytesRead
   , bin_getBytes
   , bin_remaining
@@ -3280,7 +3280,7 @@ bin_runGetState = BinaryGet.runGetState
 -- |'BinaryGet.skip'
 bin_skip = BinaryGet.skip
 -- |'BinaryGet.uncheckedSkip'
-bin_uncheckedSkip = BinaryGet.uncheckedSkip
+-- bin_uncheckedSkip = BinaryGet.uncheckedSkip
 -- |'BinaryGet.lookAhead'
 bin_lookAhead = BinaryGet.lookAhead
 -- |'BinaryGet.lookAheadM'
@@ -3288,7 +3288,7 @@ bin_lookAheadM = BinaryGet.lookAheadM
 -- |'BinaryGet.lookAheadE'
 bin_lookAheadE = BinaryGet.lookAheadE
 -- |'BinaryGet.uncheckedLookAhead'
-bin_uncheckedLookAhead = BinaryGet.uncheckedLookAhead
+-- bin_uncheckedLookAhead = BinaryGet.uncheckedLookAhead
 -- |'BinaryGet.bytesRead'
 bin_bytesRead = BinaryGet.bytesRead
 -- |'BinaryGet.getBytes'
