@@ -110,7 +110,7 @@ module KitchenSink
   , module System.Mem.Weak
   , module System.Locale
   , module System.Posix
-  , dup1, PosixHandler
+  , dup1, PosixHandler, setEnvPosix
   , module System.Process
   , module System.Random
   , splitGen
@@ -166,6 +166,8 @@ import Control.Error hiding
     , right -- disamb: rightT
     -- replaced by Control.Monad.Maybe
     , MaybeT, runMaybeT
+    -- replaced by Data.Either
+    , isLeft, isRight
     )
 import Control.Exception hiding
     -- conflicts with Control.Error
@@ -313,7 +315,9 @@ import System.Posix hiding
     -- replaced by System.Directory
     , createDirectory, removeDirectory
     -- replaced by System.Environment
-    , getEnv, getEnvironment
+    , getEnv, getEnvironment, unsetEnv
+    -- conflicts with System.Environment
+    , setEnv    -- disamb: setEnvPosix
     )
 import System.Process
 import System.Random hiding
@@ -413,6 +417,11 @@ dup1 = System.Posix.dup
 --
 -- System.Posix.Handler => PosixHandler
 type PosixHandler = System.Posix.Handler
+-- | disambiguation: System.Posix.'System.Posix.setEnv' /
+-- System.Exception.'System.Exception.setEnv'
+--
+-- System.Posix.setEnv => setEnvPosix
+setEnvPosix = System.Posix.setEnv
 
 -- | disambiguation: System.Random.'System.Random.split' /
 -- Data.List.Split.'Data.List.Split.split'
