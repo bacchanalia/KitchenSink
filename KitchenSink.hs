@@ -122,6 +122,7 @@ module KitchenSink
   , module Text.Parsec.Error
   , module Text.Parsec.Pos
   , module Text.Printf
+  , module Text.Read
   ) where
 
 import KitchenSink.Combinators
@@ -340,6 +341,10 @@ import Text.Parsec hiding
 import Text.Parsec.Error
 import Text.Parsec.Pos
 import Text.Printf
+import Text.Read
+    ( readEither
+    , readMaybe
+    )
 
 import qualified Control.Error
 import qualified Control.Exception

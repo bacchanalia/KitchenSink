@@ -16,7 +16,6 @@
 -- | Miscellaneous string functions.
 module KitchenSink.String
   ( chomp
-  , maybeRead
   ) where
 import Data.List
 
@@ -24,8 +23,5 @@ import Data.List
 chomp :: String -> String
 chomp = dropWhileEnd (== '\n')
 
--- | 'maybeRead' is like 'read' but returns a Maybe rather than throwing an
--- error on failure.
-maybeRead :: Read a => String -> Maybe a
-maybeRead s = case reads s of [(a,"")] -> Just a ; _ -> Nothing
+-- | 'multiline' is a hack for using do-notation and OverloadedStrings to write
 

@@ -21,12 +21,12 @@ module KitchenSink.System
   , inHomeDir
   , readLnRetry
   ) where
-import KitchenSink.String
 import Control.Monad
 import Data.Typeable
 import System.Directory
 import System.FilePath
 import System.Process
+import Text.Read
 
 -- | Put String into clipboard using xsel
 clipboard :: String -> IO ()
@@ -38,7 +38,7 @@ inHomeDir path = canonicalizePath . (</> path) =<< getHomeDirectory
 
 -- | Try to read a line untill one contains valid input.
 readLnRetry :: forall a. (Typeable a, Read a) => IO a
-readLnRetry = maybe failed return . maybeRead =<< getLine
+readLnRetry = maybe failed return . readMaybe =<< getLine
   where
     typestr = show $ typeOf (undefined :: a)
     failed = do
