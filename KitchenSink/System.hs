@@ -20,6 +20,7 @@ module KitchenSink.System
   ( clipboard
   , inHomeDir
   , readLnRetry
+  , rr
   ) where
 import Control.Monad
 import Data.Typeable
@@ -45,3 +46,6 @@ readLnRetry = maybe failed return . readMaybe =<< getLine
         putStrLn $ "Please try again: input was not a valid "  ++ typestr
         readLnRetry
 
+-- | Use ":cmd rr args" to reload and rerun in ghci
+rr :: String ->  IO String
+rr args = return $ ":reload\n:main " ++ args ++ "\n"
