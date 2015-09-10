@@ -178,7 +178,6 @@ import Control.Monad hiding
     -- generalized by Data.Traversable
   , forM, mapM, sequence
   )
-import Control.Monad.Instances ()
 import Control.Monad.Fix
 import Control.Monad.Trans
 import Control.Monad.Cont hiding
