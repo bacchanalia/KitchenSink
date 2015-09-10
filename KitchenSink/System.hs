@@ -19,10 +19,13 @@
 module KitchenSink.System
   ( clipboard
   , inHomeDir
+  , makeAbsolute
+  , makeAbsolute'
   , readLnRetry
   , rr
   ) where
 import Control.Monad
+import Data.List
 import Data.Typeable
 import System.Directory
 import System.FilePath
@@ -45,6 +48,26 @@ readLnRetry = maybe failed return . readMaybe =<< getLine
     failed = do
         putStrLn $ "Please try again: input was not a valid "  ++ typestr
         readLnRetry
+
+-- | Make a path absolute by prepending the current directory (if it isn't
+-- already absolute) and applying @'normalise'@ to the result.
+--
+-- The operation may fail with the same exceptions as @'getCurrentDirectory'@.
+--
+-- From: directory-1.2.2.0
+makeAbsolute :: FilePath -> IO FilePath
+makeAbsolute = fmap normalise . absolutize
+  where absolutize path -- avoid the call to `getCurrentDirectory` if we can
+          | isRelative path = fmap (</> path) getCurrentDirectory
+          | otherwise       = return path
+
+-- | Make a path absolute by prepending the current directory (if it isn't
+-- already absolute) and applying @'normalise'@ to the result.
+-- Also remove trailing /'s
+--
+-- The operation may fail with the same exceptions as @'getCurrentDirectory'@.
+makeAbsolute' :: FilePath -> IO FilePath
+makeAbsolute' = fmap (dropWhileEnd (== '/')) . makeAbsolute
 
 -- | Use ":cmd rr args" to reload and rerun in ghci
 rr :: String ->  IO String
