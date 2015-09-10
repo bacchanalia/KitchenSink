@@ -26,7 +26,8 @@ import KitchenSink.Combinators
 import Control.Applicative
 import Control.Concurrent
 import Control.Concurrent.ParallelIO.Local
-import Data.Foldable (Foldable, foldlM)
+import Data.Foldable (Foldable)
+import qualified Data.Foldable as F
 import Data.Maybe
 
 -- | Do nothing.
@@ -57,8 +58,7 @@ a <||> b = ifM a (return True) b
 
 -- | 'Data.Foldable.find' with a monadic predicate
 findM :: (Foldable f, Functor m, Monad m) => (a -> m Bool) -> f a -> m (Maybe a)
-findM p = foldlM (flip f) Nothing
-  where f a = maybe ((? a) <$> p a) (return . Just)
+findM p = F.foldr (\x -> ifM (p x) (return $ Just x)) (return Nothing)
 
 -- | 'any' with a monadic predicate
 anyM :: (Foldable f, Functor m, Monad m) => (a -> m Bool) -> f a -> m Bool
