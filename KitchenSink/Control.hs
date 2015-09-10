@@ -19,6 +19,7 @@ module KitchenSink.Control
   , ifM, whenM, unlessM
   , (<&&>), (<||>)
   , findM, anyM, allM
+  , onA
   , parIOWith, parIO, parIO_
   ) where
 import KitchenSink.Combinators
@@ -66,6 +67,11 @@ anyM = fmap isJust <$$> findM
 -- | 'all' with a monadic predicate
 allM :: (Foldable f, Functor m, Monad m) => (a -> m Bool) -> f a -> m Bool
 allM p = not <$$> anyM (not <$$> p)
+
+-- | 'on' with an applicative projection
+infixl 0 `onA`
+onA :: Applicative f => (b -> b -> c) -> (a -> f b) -> a -> a -> f c
+onA op proj a b = op <$> proj a <*> proj b
 
 -- | Run a list of IO actions given an evaluator.
 parIOWith :: (Pool -> [IO a] -> IO b) -> [IO a] -> IO b
