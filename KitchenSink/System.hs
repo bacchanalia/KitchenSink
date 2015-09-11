@@ -57,12 +57,13 @@ exitEither (Right msg) = hPutStr stdout msg >> exitSuccess
 -- freshFileName prefix "dir/name" will find a name in the form
 -- dir/prefixname-n where n is from [1..]
 freshFileName :: String -> FilePath -> IO FilePath
-freshFileName prefix path
-  = fromJust <$> findM doesNotExist names
+freshFileName prefix path = fromJust <$> findM doesNotExist names
   where
-    (dir, name) = splitFileName path
+    (dir, name) = splitFileName $ dropWhileEnd (== pathSeparator) path
+    end = if lastMay path == Just pathSeparator then "/" else ""
     doesNotExist f = not <$> (doesFileExist f <||> doesDirectoryExist f)
-    names = path : map (\n -> dir </> concat [prefix,name,"-",show n]) [(1::Int)..]
+    names = path : map format [(1::Int)..]
+    format n = dir </> concat [prefix, name,"-",show n,end]
 
 -- | Create a path within the home directory
 inHomeDir :: FilePath -> IO FilePath
