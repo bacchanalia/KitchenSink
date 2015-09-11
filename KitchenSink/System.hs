@@ -18,23 +18,51 @@
 -- | Miscellaneous IO actions.
 module KitchenSink.System
   ( clipboard
+  , exitEither
+  , freshFileName
   , inHomeDir
   , makeAbsolute
   , makeAbsolute'
   , readLnRetry
+  , readProcessE
   , rr
   ) where
+import Control.Applicative
+import Control.Error
 import Control.Monad
+import Control.Monad.Error
 import Data.List
+import Data.Maybe
 import Data.Typeable
 import System.Directory
+import System.Exit
 import System.FilePath
+import System.IO
 import System.Process
 import Text.Read
+
+import KitchenSink.Control
 
 -- | Put String into clipboard using xsel
 clipboard :: String -> IO ()
 clipboard = void . readProcess "xsel" ["--input","--clipboard"]
+
+-- | Either write to stderr and exitFailure or write to stdout and exitSuccess.
+exitEither :: Either String String -> IO ()
+exitEither (Left  msg) = hPutStr stderr msg >> exitFailure
+exitEither (Right msg) = hPutStr stdout msg >> exitSuccess
+
+-- | Find an unused filename similar to a given name.
+--
+-- freshFileName prefix "dir/name" will find a name in the form
+-- dir/prefixname-n where n is from [1..]
+freshFileName :: String -> FilePath -> IO FilePath
+freshFileName prefix path
+  = fromJust <$> findM doesNotExist names
+  where
+    (dir, name) = splitFileName path
+    doesNotExist f = not <$> (doesFileExist f <||> doesDirectoryExist f)
+    names = path : map (\n -> dir </> concat [prefix,name,"-",show n]) [(1::Int)..]
 
 -- | Create a path within the home directory
 inHomeDir :: FilePath -> IO FilePath
@@ -68,6 +96,16 @@ makeAbsolute = fmap normalise . absolutize
 -- The operation may fail with the same exceptions as @'getCurrentDirectory'@.
 makeAbsolute' :: FilePath -> IO FilePath
 makeAbsolute' = fmap (dropWhileEnd (== '/')) . makeAbsolute
+
+-- | 'System.Process.readProcessWithExitCode' with command failure and
+-- exceptions captured inside EitherT.
+--
+-- Returns the contents of stdout on success.
+-- Returns the exception message or the contents of stderr on failure.
+readProcessE :: String -> [String] -> String -> EitherT String IO String
+readProcessE cmd args input = do
+  (ec, out, err) <- scriptIO $ readProcessWithExitCode cmd args input
+  if ec == ExitSuccess then return out else throwError err
 
 -- | Use ":cmd rr args" to reload and rerun in ghci
 rr :: String ->  IO String

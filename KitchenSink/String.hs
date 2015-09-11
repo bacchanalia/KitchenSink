@@ -16,7 +16,8 @@
 -- | Miscellaneous string functions.
 {-# LANGUAGE OverloadedStrings, GeneralizedNewtypeDeriving, FlexibleInstances #-}
 module KitchenSink.String
-  ( chomp
+  ( escapeFilePath
+  , chomp
   , multiline, Lines
   ) where
 
@@ -24,6 +25,10 @@ import Control.Applicative
 import Control.Monad.Writer
 import Data.List
 import Data.String
+
+-- | Reneder a filepath such that it can be pasted into a command when printed.
+escapeFilePath :: FilePath -> String
+escapeFilePath = ("'" ++) . (++ "'") . concatMap (\c -> case c of '\'' -> "'\\''" ; _ -> [c])
 
 -- | Remove trainling newlines from a string
 chomp :: String -> String
